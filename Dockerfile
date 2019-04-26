@@ -4,6 +4,8 @@ MAINTAINER github@abstruse.systems
 ENV DATA_DIR=/data \
 	BIND_USER=bind
 
+RUN echo exit 0 > /usr/sbin/policy-rc.d
+
 RUN rm -rf /etc/apt/apt.conf.d/docker-gzip-indexes \
 	&& apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y wget bind9 dnsutils \
@@ -11,8 +13,6 @@ RUN rm -rf /etc/apt/apt.conf.d/docker-gzip-indexes \
 
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
-
-RUN echo exit 0 > /usr/sbin/policy-rc.d
 
 EXPOSE 53/udp 53/tcp
 
