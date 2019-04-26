@@ -11,6 +11,9 @@ RUN rm -rf /etc/apt/apt.conf.d/docker-gzip-indexes \
 
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
+RUN ls -alt /sbin/
+
+RUN echo exit 0 > /usr/sbin/policy-rc.d
 
 EXPOSE 53/udp 53/tcp
 
