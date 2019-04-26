@@ -3,7 +3,7 @@ set -e
 
 ROOT_PASSWORD=${ROOT_PASSWORD:-password}
 
-BIND_DATA_DIR=${DATA_DIR}/bind
+BIND_DATA_DIR=${DATA_DIR}
 
 create_bind_data_dir() {
   mkdir -p ${BIND_DATA_DIR}
