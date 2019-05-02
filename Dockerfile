@@ -1,4 +1,4 @@
-FROM balenalib/raspberrypi3-debian:latest
+FROM balenalib/raspberrypi3-alpine:latest
 MAINTAINER github -at- abstruse -dot- systems
 
 ENV DATA_DIR=/data \
@@ -6,10 +6,8 @@ ENV DATA_DIR=/data \
 
 RUN echo exit 0 > /usr/sbin/policy-rc.d
 
-RUN rm -rf /etc/apt/apt.conf.d/docker-gzip-indexes \
-	&& apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install -y wget bind9 dnsutils \
-	&& rm -rf /var/lib/apt/lists/*
+RUN apk add --update bind \
+	&& rm -rf /var/cache/apk/*
 
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
