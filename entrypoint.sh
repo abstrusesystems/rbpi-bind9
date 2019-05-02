@@ -6,7 +6,6 @@ BIND_DATA_DIR=${DATA_DIR}
 create_bind_data_dir() {
 	mkdir -p ${BIND_DATA_DIR}
 	chmod -R 0755 ${BIND_DATA_DIR}
-#	chown -R root:${BIND_USER} ${BIND_DATA_DIR}
 
 # populate default bind configuration if it does not exist
 	if [ ! -d ${BIND_DATA_DIR}/etc ]; then
@@ -17,7 +16,6 @@ create_bind_data_dir() {
 
 	if [ ! -d ${BIND_DATA_DIR}/lib ]; then
 		mkdir -p ${BIND_DATA_DIR}/lib
-#		chown root:${BIND_USER} ${BIND_DATA_DIR}/lib
 	fi
 
 	rm -rf /var/lib/bind
@@ -26,12 +24,10 @@ create_bind_data_dir() {
 
 create_pid_dir() {
 	mkdir -m 0775 -p /var/run/named
-#	chown root:${BIND_USER} /var/run/named
 }
 
 create_bind_cache_dir() {
 	mkdir -m 0775 -p /var/cache/bind
-#	chown root:${BIND_USER} /var/cache/bind
 }
 
 create_pid_dir
@@ -50,7 +46,6 @@ fi
 # default behaviour is to launch named
 if [[ -z ${1} ]]; then
 	echo "Starting named..."
-#	exec $(which named) -u ${BIND_USER} -g ${EXTRA_ARGS}
 	exec $(which named) -g ${EXTRA_ARGS}
 else
 	exec "$@"
