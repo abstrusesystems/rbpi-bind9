@@ -6,7 +6,7 @@ ENV DATA_DIR=/data \
 
 RUN echo exit 0 > /usr/sbin/policy-rc.d
 
-RUN apk add --update bind9 \
+RUN apk add --update bind \
 	&& rm -rf /var/cache/apk/*
 
 #RUN rm -rf /etc/apt/apt.conf.d/docker-gzip-indexes \
