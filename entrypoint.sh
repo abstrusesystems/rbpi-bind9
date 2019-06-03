@@ -1,52 +1,47 @@
-#!/bin/bash
+#!/bin/sh
+
+# exit on error
 set -e
 
-BIND_DATA_DIR=${DATA_DIR}
-
-create_bind_data_dir() {
-	mkdir -p ${BIND_DATA_DIR}
-	chmod -R 0755 ${BIND_DATA_DIR}
-
-# populate default bind configuration if it does not exist
-	if [ ! -d ${BIND_DATA_DIR}/etc ]; then
-		mv /etc/bind ${BIND_DATA_DIR}/etc
+# initialize data directory
+init_data() {
+	# create root directory
+	mkdir -p ${DATA}
+	
+	# if not directory /etc then create
+	if [[ ! -d ${DATA}/etc ]];
+	then
+		mv /etc/bind ${DATA}/etc
 	fi
+	
+	# delete old location
 	rm -rf /etc/bind
-	ln -sf ${BIND_DATA_DIR}/etc /etc/bind
+	
+	# link old location to new directory
+	ln -sf ${DATA}/etc /etc/bind
 
-	if [ ! -d ${BIND_DATA_DIR}/lib ]; then
-		mkdir -p ${BIND_DATA_DIR}/lib
+
+	# if not directory /var then create
+	if [[ ! -d ${DATA}/var ]];
+	then
+		mv /var/bind ${DATA}/var
 	fi
-
-	rm -rf /var/lib/bind
-	ln -sf ${BIND_DATA_DIR}/lib /var/lib/bind
+	
+	# delete old location
+	rm -rf /var/bind
+	
+	# link old location to new directory
+	ln -sf ${DATA}/var /var/bind
 }
 
-create_pid_dir() {
-	mkdir -m 0775 -p /var/run/named
-}
+init_data
 
-create_bind_cache_dir() {
-	mkdir -m 0775 -p /var/cache/bind
-}
-
-create_pid_dir
-create_bind_data_dir
-create_bind_cache_dir
-
-# allow arguments to be passed to named
-if [[ ${1:0:1} = '-' ]]; then
-	EXTRA_ARGS="$@"
-	set --
-elif [[ ${1} == named || ${1} == $(which named) ]]; then
-	EXTRA_ARGS="${@:2}"
-	set --
+#check for bind configuration in default location
+if [[ ! -f ${DATA}/etc/named.conf ]]
+then
+	echo "Please place your bind9 configuration in ${DATA}/etc/named.conf"
 fi
 
-# default behaviour is to launch named
-if [[ -z ${1} ]]; then
-	echo "Starting named..."
-	exec $(which named) -g ${EXTRA_ARGS}
-else
-	exec "$@"
-fi
+# run CMD
+echo "Running '$@'"
+exec "$@"
